@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин Спецодежды</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Подключение Chart.js через CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Подключение Firebase SDK -->
+    <!-- Firebase App (обязательно для использования Firebase) -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <!-- Firebase Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+</head>
+<body>
+    <!-- Header с переключателем валют -->
+    <header>
+        <div class="container">
+            <h1>Магазин Спецодежды</h1>
+            <div class="currency-switcher">
+                <label for="currency-select">Валюта:</label>
+                <select id="currency-select">
+                    <option value="UZS">UZS</option>
+                    <option value="USD">USD</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+        <!-- Каталог товаров -->
+        <section class="catalog">
+            <div class="container">
+                <h2>Каталог товаров</h2>
+                <div class="category-list">
+                    <div class="category" data-category="coveralls">
+                        <h3>Рабочие комбинезоны</h3>
+                    </div>
+                    <div class="category" data-category="shoes">
+                        <h3>Обувь</h3>
+                    </div>
+                    <div class="category" data-category="accessories">
+                        <h3>Аксессуары</h3>
+                    </div>
+                    <div class="category" data-category="tshirts">
+                        <h3>Футболки</h3>
+                    </div>
+                    <div class="category" data-category="chef_clothing">
+                        <h3>Поварская одежда</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Модальные окна для товаров -->
+        <!-- Coveralls Modal -->
+        <div class="modal" id="modal-coveralls">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Рабочие комбинезоны</h2>
+                <div class="fashion-list">
+                    <!-- 10 Фасонов Рабочих комбинезонов -->
+                    <!-- Фасон 1 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="15000000">
+                        <img src="images/coverall1.jpg" alt="Рабочий комбинезон 1">
+                        <p>Фасон 1</p>
+                        <p class="price" data-price="15000000">Цена: 15,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 2 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="20000000">
+                        <img src="images/coverall2.jpg" alt="Рабочий комбинезон 2">
+                        <p>Фасон 2</p>
+                        <p class="price" data-price="20000000">Цена: 20,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 3 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="18000000">
+                        <img src="images/coverall3.jpg" alt="Рабочий комбинезон 3">
+                        <p>Фасон 3</p>
+                        <p class="price" data-price="18000000">Цена: 18,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 4 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="16000000">
+                        <img src="images/coverall4.jpg" alt="Рабочий комбинезон 4">
+                        <p>Фасон 4</p>
+                        <p class="price" data-price="16000000">Цена: 16,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 5 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="17000000">
+                        <img src="images/coverall5.jpg" alt="Рабочий комбинезон 5">
+                        <p>Фасон 5</p>
+                        <p class="price" data-price="17000000">Цена: 17,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 6 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="19000000">
+                        <img src="images/coverall6.jpg" alt="Рабочий комбинезон 6">
+                        <p>Фасон 6</p>
+                        <p class="price" data-price="19000000">Цена: 19,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 7 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="21000000">
+                        <img src="images/coverall7.jpg" alt="Рабочий комбинезон 7">
+                        <p>Фасон 7</p>
+                        <p class="price" data-price="21000000">Цена: 21,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 8 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="14000000">
+                        <img src="images/coverall8.jpg" alt="Рабочий комбинезон 8">
+                        <p>Фасон 8</p>
+                        <p class="price" data-price="14000000">Цена: 14,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 9 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="17500000">
+                        <img src="images/coverall9.jpg" alt="Рабочий комбинезон 9">
+                        <p>Фасон 9</p>
+                        <p class="price" data-price="17500000">Цена: 17,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 10 -->
+                    <div class="fashion-item" data-category="coveralls" data-price="18500000">
+                        <img src="images/coverall10.jpg" alt="Рабочий комбинезон 10">
+                        <p>Фасон 10</p>
+                        <p class="price" data-price="18500000">Цена: 18,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shoes Modal -->
+        <div class="modal" id="modal-shoes">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Обувь</h2>
+                <div class="fashion-list">
+                    <!-- 10 Фасонов Обуви -->
+                    <!-- Фасон 1 -->
+                    <div class="fashion-item" data-category="shoes" data-price="12000000">
+                        <img src="images/shoes1.jpg" alt="Обувь 1">
+                        <p>Фасон 1</p>
+                        <p class="price" data-price="12000000">Цена: 12,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 2 -->
+                    <div class="fashion-item" data-category="shoes" data-price="18000000">
+                        <img src="images/shoes2.jpg" alt="Обувь 2">
+                        <p>Фасон 2</p>
+                        <p class="price" data-price="18000000">Цена: 18,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 3 -->
+                    <div class="fashion-item" data-category="shoes" data-price="16000000">
+                        <img src="images/shoes3.jpg" alt="Обувь 3">
+                        <p>Фасон 3</p>
+                        <p class="price" data-price="16000000">Цена: 16,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 4 -->
+                    <div class="fashion-item" data-category="shoes" data-price="14000000">
+                        <img src="images/shoes4.jpg" alt="Обувь 4">
+                        <p>Фасон 4</p>
+                        <p class="price" data-price="14000000">Цена: 14,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 5 -->
+                    <div class="fashion-item" data-category="shoes" data-price="17000000">
+                        <img src="images/shoes5.jpg" alt="Обувь 5">
+                        <p>Фасон 5</p>
+                        <p class="price" data-price="17000000">Цена: 17,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 6 -->
+                    <div class="fashion-item" data-category="shoes" data-price="19000000">
+                        <img src="images/shoes6.jpg" alt="Обувь 6">
+                        <p>Фасон 6</p>
+                        <p class="price" data-price="19000000">Цена: 19,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 7 -->
+                    <div class="fashion-item" data-category="shoes" data-price="20000000">
+                        <img src="images/shoes7.jpg" alt="Обувь 7">
+                        <p>Фасон 7</p>
+                        <p class="price" data-price="20000000">Цена: 20,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 8 -->
+                    <div class="fashion-item" data-category="shoes" data-price="13000000">
+                        <img src="images/shoes8.jpg" alt="Обувь 8">
+                        <p>Фасон 8</p>
+                        <p class="price" data-price="13000000">Цена: 13,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 9 -->
+                    <div class="fashion-item" data-category="shoes" data-price="17500000">
+                        <img src="images/shoes9.jpg" alt="Обувь 9">
+                        <p>Фасон 9</p>
+                        <p class="price" data-price="17500000">Цена: 17,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 10 -->
+                    <div class="fashion-item" data-category="shoes" data-price="18500000">
+                        <img src="images/shoes10.jpg" alt="Обувь 10">
+                        <p>Фасон 10</p>
+                        <p class="price" data-price="18500000">Цена: 18,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessories Modal -->
+        <div class="modal" id="modal-accessories">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Аксессуары</h2>
+                <div class="fashion-list">
+                    <!-- 10 Фасонов Аксессуаров -->
+                    <!-- Фасон 1 -->
+                    <div class="fashion-item" data-category="accessories" data-price="5000000">
+                        <img src="images/accessory1.jpg" alt="Аксессуар 1">
+                        <p>Фасон 1</p>
+                        <p class="price" data-price="5000000">Цена: 5,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 2 -->
+                    <div class="fashion-item" data-category="accessories" data-price="8000000">
+                        <img src="images/accessory2.jpg" alt="Аксессуар 2">
+                        <p>Фасон 2</p>
+                        <p class="price" data-price="8000000">Цена: 8,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 3 -->
+                    <div class="fashion-item" data-category="accessories" data-price="7500000">
+                        <img src="images/accessory3.jpg" alt="Аксессуар 3">
+                        <p>Фасон 3</p>
+                        <p class="price" data-price="7500000">Цена: 7,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 4 -->
+                    <div class="fashion-item" data-category="accessories" data-price="9000000">
+                        <img src="images/accessory4.jpg" alt="Аксессуар 4">
+                        <p>Фасон 4</p>
+                        <p class="price" data-price="9000000">Цена: 9,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 5 -->
+                    <div class="fashion-item" data-category="accessories" data-price="6500000">
+                        <img src="images/accessory5.jpg" alt="Аксессуар 5">
+                        <p>Фасон 5</p>
+                        <p class="price" data-price="6500000">Цена: 6,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 6 -->
+                    <div class="fashion-item" data-category="accessories" data-price="8500000">
+                        <img src="images/accessory6.jpg" alt="Аксессуар 6">
+                        <p>Фасон 6</p>
+                        <p class="price" data-price="8500000">Цена: 8,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 7 -->
+                    <div class="fashion-item" data-category="accessories" data-price="7000000">
+                        <img src="images/accessory7.jpg" alt="Аксессуар 7">
+                        <p>Фасон 7</p>
+                        <p class="price" data-price="7000000">Цена: 7,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 8 -->
+                    <div class="fashion-item" data-category="accessories" data-price="9500000">
+                        <img src="images/accessory8.jpg" alt="Аксессуар 8">
+                        <p>Фасон 8</p>
+                        <p class="price" data-price="9500000">Цена: 9,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 9 -->
+                    <div class="fashion-item" data-category="accessories" data-price="7800000">
+                        <img src="images/accessory9.jpg" alt="Аксессуар 9">
+                        <p>Фасон 9</p>
+                        <p class="price" data-price="7800000">Цена: 7,800,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 10 -->
+                    <div class="fashion-item" data-category="accessories" data-price="8200000">
+                        <img src="images/accessory10.jpg" alt="Аксессуар 10">
+                        <p>Фасон 10</p>
+                        <p class="price" data-price="8200000">Цена: 8,200,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- T-Shirts Modal -->
+        <div class="modal" id="modal-tshirts">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Футболки</h2>
+                <div class="fashion-list">
+                    <!-- 10 Фасонов Футболок -->
+                    <!-- Фасон 1 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="7000000">
+                        <img src="images/tshirt1.jpg" alt="Футболка 1">
+                        <p>Фасон 1</p>
+                        <p class="price" data-price="7000000">Цена: 7,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 2 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="9000000">
+                        <img src="images/tshirt2.jpg" alt="Футболка 2">
+                        <p>Фасон 2</p>
+                        <p class="price" data-price="9000000">Цена: 9,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 3 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="8000000">
+                        <img src="images/tshirt3.jpg" alt="Футболка 3">
+                        <p>Фасон 3</p>
+                        <p class="price" data-price="8000000">Цена: 8,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 4 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="8500000">
+                        <img src="images/tshirt4.jpg" alt="Футболка 4">
+                        <p>Фасон 4</p>
+                        <p class="price" data-price="8500000">Цена: 8,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 5 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="9500000">
+                        <img src="images/tshirt5.jpg" alt="Футболка 5">
+                        <p>Фасон 5</p>
+                        <p class="price" data-price="9500000">Цена: 9,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 6 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="7500000">
+                        <img src="images/tshirt6.jpg" alt="Футболка 6">
+                        <p>Фасон 6</p>
+                        <p class="price" data-price="7500000">Цена: 7,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 7 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="10000000">
+                        <img src="images/tshirt7.jpg" alt="Футболка 7">
+                        <p>Фасон 7</p>
+                        <p class="price" data-price="10000000">Цена: 10,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 8 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="6800000">
+                        <img src="images/tshirt8.jpg" alt="Футболка 8">
+                        <p>Фасон 8</p>
+                        <p class="price" data-price="6800000">Цена: 6,800,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 9 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="8200000">
+                        <img src="images/tshirt9.jpg" alt="Футболка 9">
+                        <p>Фасон 9</p>
+                        <p class="price" data-price="8200000">Цена: 8,200,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 10 -->
+                    <div class="fashion-item" data-category="tshirts" data-price="8800000">
+                        <img src="images/tshirt10.jpg" alt="Футболка 10">
+                        <p>Фасон 10</p>
+                        <p class="price" data-price="8800000">Цена: 8,800,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chef Clothing Modal -->
+        <div class="modal" id="modal-chef_clothing">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Поварская одежда</h2>
+                <div class="fashion-list">
+                    <!-- 10 Фасонов Поварской одежды -->
+                    <!-- Фасон 1 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="13000000">
+                        <img src="images/chef1.jpg" alt="Поварская одежда 1">
+                        <p>Фасон 1</p>
+                        <p class="price" data-price="13000000">Цена: 13,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 2 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="17000000">
+                        <img src="images/chef2.jpg" alt="Поварская одежда 2">
+                        <p>Фасон 2</p>
+                        <p class="price" data-price="17000000">Цена: 17,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 3 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="16000000">
+                        <img src="images/chef3.jpg" alt="Поварская одежда 3">
+                        <p>Фасон 3</p>
+                        <p class="price" data-price="16000000">Цена: 16,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 4 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="15000000">
+                        <img src="images/chef4.jpg" alt="Поварская одежда 4">
+                        <p>Фасон 4</p>
+                        <p class="price" data-price="15000000">Цена: 15,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 5 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="18000000">
+                        <img src="images/chef5.jpg" alt="Поварская одежда 5">
+                        <p>Фасон 5</p>
+                        <p class="price" data-price="18000000">Цена: 18,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 6 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="19000000">
+                        <img src="images/chef6.jpg" alt="Поварская одежда 6">
+                        <p>Фасон 6</p>
+                        <p class="price" data-price="19000000">Цена: 19,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 7 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="20000000">
+                        <img src="images/chef7.jpg" alt="Поварская одежда 7">
+                        <p>Фасон 7</p>
+                        <p class="price" data-price="20000000">Цена: 20,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 8 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="14000000">
+                        <img src="images/chef8.jpg" alt="Поварская одежда 8">
+                        <p>Фасон 8</p>
+                        <p class="price" data-price="14000000">Цена: 14,000,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 9 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="17500000">
+                        <img src="images/chef9.jpg" alt="Поварская одежда 9">
+                        <p>Фасон 9</p>
+                        <p class="price" data-price="17500000">Цена: 17,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                    <!-- Фасон 10 -->
+                    <div class="fashion-item" data-category="chef_clothing" data-price="18500000">
+                        <img src="images/chef10.jpg" alt="Поварская одежда 10">
+                        <p>Фасон 10</p>
+                        <p class="price" data-price="18500000">Цена: 18,500,000 UZS</p>
+                        <button class="select-btn">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для выбора опций -->
+        <div class="modal" id="modal-fashion">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Выбор товара</h2>
+                <div class="product-options">
+                    <img src="" id="fashion-image" alt="Товар">
+                    <p id="fashion-name">Фасон</p>
+                    <p id="fashion-price">Цена: </p>
+                    <form id="order-form">
+                        <div class="size-selection">
+                            <label>Размеры и количество:</label>
+                            <div class="size-option">
+                                <span>XS</span>
+                                <input type="number" min="0" value="0" data-size="XS" class="size-quantity" />
+                            </div>
+                            <div class="size-option">
+                                <span>S</span>
+                                <input type="number" min="0" value="0" data-size="S" class="size-quantity" />
+                            </div>
+                            <div class="size-option">
+                                <span>M</span>
+                                <input type="number" min="0" value="0" data-size="M" class="size-quantity" />
+                            </div>
+                            <div class="size-option">
+                                <span>L</span>
+                                <input type="number" min="0" value="0" data-size="L" class="size-quantity" />
+                            </div>
+                            <div class="size-option">
+                                <span>XL</span>
+                                <input type="number" min="0" value="0" data-size="XL" class="size-quantity" />
+                            </div>
+                            <div class="size-option">
+                                <span>XXL</span>
+                                <input type="number" min="0" value="0" data-size="XXL" class="size-quantity" />
+                            </div>
+                        </div>
+
+                        <label for="color">Цвет:</label>
+                        <select id="color" name="color" required>
+                            <option value="" disabled selected>Выберите цвет</option>
+                            <option value="blue">Синий</option>
+                            <option value="red">Красный</option>
+                            <option value="black">Черный</option>
+                            <option value="green">Зеленый</option>
+                        </select>
+
+                        <label for="delivery-date">Дата доставки:</label>
+                        <input type="date" id="delivery-date" name="delivery-date" required>
+
+                        <label for="notes">Заметки:</label>
+                        <textarea id="notes" name="notes" rows="3" placeholder="Дополнительные заметки"></textarea>
+
+                        <button type="submit">Добавить в корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Корзина -->
+        <section class="cart">
+            <div class="container">
+                <h2>Корзина</h2>
+                <div id="cart-items"></div>
+                <button id="checkout">Оформить заказ</button>
+                <button id="compare-selected">Сравнить выбранные</button>
+            </div>
+        </section>
+
+        <!-- Модальное окно для оформления заказа -->
+        <div class="modal" id="modal-checkout">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Оформление заказа</h2>
+                <form id="checkout-form">
+                    <label for="customer-name">Имя:</label>
+                    <input type="text" id="customer-name" required>
+
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" id="phone" required pattern="^[0-9+\-() ]{7,15}$" placeholder="+7 (999) 999-99-99">
+
+                    <label for="company">Компания:</label>
+                    <input type="text" id="company" required>
+
+                    <button type="submit">Подтвердить заказ</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно для редактирования заказа -->
+        <div class="modal" id="modal-edit-order">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Редактирование заказа</h2>
+                <div class="product-options">
+                    <form id="edit-order-form">
+                        <label for="edit-customer-name">Имя:</label>
+                        <input type="text" id="edit-customer-name" required>
+
+                        <label for="edit-phone">Телефон:</label>
+                        <input type="tel" id="edit-phone" required pattern="^[0-9+\-() ]{7,15}$" placeholder="+7 (999) 999-99-99">
+
+                        <label for="edit-company">Компания:</label>
+                        <input type="text" id="edit-company" required>
+
+                        <button type="submit">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для сравнения товаров -->
+        <div class="modal" id="modal-compare">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Сравнение товаров</h2>
+                <div class="compare-list" id="compare-list">
+                    <!-- Сравниваемые товары будут добавлены здесь -->
+                </div>
+            </div>
+        </div>
+
+        <!-- История заказов -->
+        <section class="order-history">
+            <div class="container">
+                <h2>История заказов</h2>
+                <div id="order-history-items"></div>
+            </div>
+        </section>
+
+        <!-- Секция Аналитика -->
+        <section class="analytics">
+            <div class="container">
+                <h2>Аналитика Продаж</h2>
+                <div class="analytics-charts">
+                    <canvas id="monthly-sales-chart"></canvas>
+                    <canvas id="top-products-chart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно для уведомлений -->
+    <div class="modal" id="modal-notification">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="notification-message"></p>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
