@@ -390,6 +390,7 @@ h3 {
     transition: background-color 0.3s ease, transform 0.3s ease;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .cart-item:hover, .order-item:hover {
@@ -435,7 +436,7 @@ h3 {
     transform: translateY(-2px);
 }
 
-/* Кнопки редактирования, удаления и сравнения */
+/* Кнопки редактирования, удаления, сравнения и печати */
 .order-item-actions {
     display: flex;
     gap: 10px;
@@ -461,6 +462,10 @@ h3 {
     background-color: #17a2b8;
 }
 
+.order-item-actions button.print-btn {
+    background-color: #6c757d;
+}
+
 .order-item-actions button:hover {
     transform: translateY(-2px);
 }
@@ -471,6 +476,10 @@ h3 {
 
 .order-item-actions button.compare-btn:hover {
     background-color: #138496;
+}
+
+.order-item-actions button.print-btn:hover {
+    background-color: #5a6268;
 }
 
 /* Сравнение товаров */
@@ -641,18 +650,22 @@ button:hover {
 
 /* Мигающие цвета для заказов */
 .deadline-green {
+    border-left: 5px solid #28a745;
     animation: flashGreen 1s infinite;
 }
 
 .deadline-yellow {
+    border-left: 5px solid #ffc107;
     animation: flashYellow 1s infinite;
 }
 
 .deadline-orange {
+    border-left: 5px solid #fd7e14;
     animation: flashOrange 1s infinite;
 }
 
 .deadline-red {
+    border-left: 5px solid #dc3545;
     animation: flashRed 1s infinite;
 }
 
@@ -684,20 +697,34 @@ button:hover {
     transition: background-color 0.5s ease;
 }
 
-.deadline-green {
-    border-left: 5px solid #28a745;
+.order-item-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
 }
 
-.deadline-yellow {
-    border-left: 5px solid #ffc107;
+.order-item-details img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
-.deadline-orange {
-    border-left: 5px solid #fd7e14;
+.order-item-details div {
+    flex: 1;
 }
 
-.deadline-red {
-    border-left: 5px solid #dc3545;
+.order-item-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.order-total {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: #007bff;
 }
 
 /* Секция Аналитики */
@@ -727,4 +754,127 @@ button:hover {
     height: 400px !important;
 }
 
-/* Модули модальных окон и другие элементы, если необходимо */
+/* Стили для модального окна печати */
+#modal-print .modal-content {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+}
+
+#printable-content {
+    text-align: left;
+}
+
+#printable-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#printable-content p {
+    margin-bottom: 10px;
+}
+
+.order-item-details p {
+    margin: 2px 0;
+}
+
+/* Новые стили для печатного чека */
+.receipt-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.receipt-section {
+    width: 48%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.company-section {
+    /* Стили для секции компании */
+}
+
+.client-section {
+    /* Стили для секции клиента */
+}
+
+.company-section h2, .client-section h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.company-section p, .client-section p {
+    margin-bottom: 5px;
+}
+
+.order-items-list {
+    margin-top: 10px;
+}
+
+.order-item-details {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.order-total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#modal-print #print-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#modal-print #print-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #printable-content, #printable-content * {
+        visibility: visible;
+    }
+    #printable-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .modal {
+        display: none; /* Скрываем модальные окна при печати */
+    }
+    .receipt-container {
+        flex-direction: row;
+    }
+    .receipt-section {
+        width: 48%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+    .receipt-section img {
+        max-width: 100px;
+        height: auto;
+    }
+    /* Уменьшаем размеры изображений в чеке */
+    .order-item-details img {
+        width: 60px;
+        height: 80px;
+    }
+}

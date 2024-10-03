@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const firebaseConfig = {
         apiKey: "AIzaSyDH2AS_JOYtLNRjOsJUNzjEa70sa0JFIfo",
         authDomain: "azdilteks-a8867.firebaseapp.com",
-        databaseURL: "https://azdilteks-a8867-default-rtdb.firebaseio.com", // Добавьте URL базы данных
+        databaseURL: "https://azdilteks-a8867-default-rtdb.firebaseio.com",
         projectId: "azdilteks-a8867",
         storageBucket: "azdilteks-a8867.appspot.com",
         messagingSenderId: "694134591027",
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkoutModal = document.getElementById("modal-checkout");
     const editOrderModal = document.getElementById("modal-edit-order");
     const compareModal = document.getElementById("modal-compare"); // Модальное окно для сравнения
+    const printModal = document.getElementById("modal-print"); // Модальное окно для печати
     const cart = [];
     const cartItemsContainer = document.getElementById("cart-items");
     const orderHistoryContainer = document.getElementById("order-history-items");
@@ -146,36 +147,47 @@ document.addEventListener("DOMContentLoaded", function () {
         initializeSmartDate();
     });
 
-    // Обновление корзины
+    // Обновление корзины с учетом скидки
     function updateCart() {
         cartItemsContainer.innerHTML = "";
         let totalPrice = 0;
+        let totalQuantity = 0;
+
         cart.forEach((item, index) => {
             const cartItemElement = document.createElement("div");
             cartItemElement.classList.add("cart-item");
             cartItemElement.innerHTML = `
                 <img src="${item.image}" alt="${item.name}">
-                <div>
-                    <p><strong>${item.name}</strong></p>
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
                     <p>Размер: ${item.size}</p>
                     <p>Цвет: ${item.color}</p>
                     <p>Количество: ${item.quantity}</p>
                     <p>Заметки: ${item.notes}</p>
                     <p>Дата доставки: ${formatDate(item.deliveryDate)}</p>
-                    <p class="price" data-price="${item.price}">${formatPrice(item.price)}</p>
-                    <p class="total-price" data-total="${item.price * item.quantity}"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
+                    <p class="price" data-price="${item.price}">Цена за единицу: ${formatPrice(item.price)}</p>
+                    <p class="total-price" data-total="${item.price * item.quantity}">Итого: ${formatPrice(item.price * item.quantity)}</p>
                 </div>
                 <button class="remove-cart-item" data-index="${index}">Удалить</button>
             `;
             cartItemsContainer.appendChild(cartItemElement);
             totalPrice += item.price * item.quantity;
+            totalQuantity += item.quantity;
         });
+
+        // Применение скидки
+        const discount = calculateDiscount(totalQuantity);
+        const discountedPrice = totalPrice - (totalPrice * discount);
 
         // Добавление общего итога
         if (cart.length > 0) {
             const totalElement = document.createElement("div");
             totalElement.classList.add("cart-total");
-            totalElement.innerHTML = `<p><strong>Общая сумма: ${formatPrice(totalPrice)}</strong></p>`;
+            totalElement.innerHTML = `
+                <p><strong>Общая сумма: ${formatPrice(totalPrice)}</strong></p>
+                <p><strong>Скидка: ${discount * 100}%</strong></p>
+                <p><strong>Сумма со скидкой: ${formatPrice(discountedPrice)}</strong></p>
+            `;
             cartItemsContainer.appendChild(totalElement);
         }
 
@@ -191,6 +203,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         saveCart();
+    }
+
+    // Функция для расчета скидки
+    function calculateDiscount(quantity) {
+        if (quantity >= 5000) {
+            return 0.10; // 10% скидка
+        } else if (quantity >= 1000) {
+            return 0.07; // 7% скидка
+        } else if (quantity >= 100) {
+            return 0.05; // 5% скидка
+        } else if (quantity >= 10) {
+            return 0.02; // 2% скидка
+        } else {
+            return 0; // Нет скидки
+        }
     }
 
     // Оформление заказа и открытие модального окна для данных клиента
@@ -228,26 +255,37 @@ document.addEventListener("DOMContentLoaded", function () {
         updateAnalyticsData(); // Обновление данных аналитики
     });
 
-    // Добавление заказа в базу данных Firebase
+    // Добавление заказа в базу данных Firebase с учетом скидки
     function addOrder(order) {
+        // Расчет скидки и обновление цен в заказе
+        let totalQuantity = 0;
+        let totalPrice = 0;
+        order.items.forEach(item => {
+            totalQuantity += item.quantity;
+            totalPrice += item.price * item.quantity;
+        });
+        const discount = calculateDiscount(totalQuantity);
+        const discountedPrice = totalPrice - (totalPrice * discount);
+        order.totalPrice = discountedPrice;
+        order.discount = discount;
+
         const ordersRef = database.ref('orders');
         const newOrderRef = ordersRef.push();
         newOrderRef.set(order)
             .then(() => {
                 order.id = newOrderRef.key;
-                // Удаляем вызов displayOrder(order); чтобы избежать дублирования
-                // displayOrder(order); // Эту строку мы удалили
+                // Заказы автоматически загружаются через слушатель
             })
             .catch((error) => {
                 console.error('Error adding order:', error);
             });
     }
 
-    // Отображение заказа в истории
+    // Отображение заказа в истории с учетом скидки
     function displayOrder(order) {
         // Проверка наличия items массива
         if (!order.items || !Array.isArray(order.items)) {
-            console.error("Order items are undefined or not an array:", order);
+            console.error("Order items are undefined или не массив:", order);
             return;
         }
 
@@ -272,39 +310,56 @@ document.addEventListener("DOMContentLoaded", function () {
         const orderElement = document.createElement("div");
         orderElement.classList.add("order-item", deadlineClass);
         orderElement.setAttribute("data-order-id", order.id);
+
+        // Добавляем информацию о скидке
+        const discountPercentage = order.discount ? order.discount * 100 : 0;
+        const orderTotalPrice = order.totalPrice ? order.totalPrice : 0;
+
         orderElement.innerHTML = `
-            <h3>Заказ от ${order.customerName} (${formatDate(order.items[0].deliveryDate)})</h3>
-            <p><strong>Телефон:</strong> ${order.phone}</p>
-            <p><strong>Компания:</strong> ${order.company}</p>
+            <div class="order-header">
+                <h3>Заказ от ${order.customerName}</h3>
+                <span class="deadline">${daysRemaining} дней до дедлайна</span>
+            </div>
+            <div class="order-info">
+                <p><strong>Телефон:</strong> ${order.phone}</p>
+                <p><strong>Компания:</strong> ${order.company}</p>
+                <p><strong>Дата доставки:</strong> ${formatDate(order.items[0].deliveryDate)}</p>
+            </div>
             <div class="order-items-list">
                 ${order.items.map(item => `
                     <div class="order-item-details">
                         <img src="${item.image}" alt="${item.name}">
-                        <div>
+                        <div class="item-info">
                             <p><strong>${item.name}</strong></p>
                             <p>Размер: ${item.size}</p>
                             <p>Цвет: ${item.color}</p>
                             <p>Количество: ${item.quantity}</p>
                             <p>Заметки: ${item.notes}</p>
-                            <p class="price" data-price="${item.price}">Цена за единицу: ${formatPrice(item.price)}</p>
-                            <p class="total-price" data-total="${item.price * item.quantity}"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
+                            <p class="price">Цена за единицу: ${formatPrice(item.price)}</p>
+                            <p class="total-price"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
                         </div>
                     </div>
                 `).join('')}
+            </div>
+            <div class="order-summary">
+                <p><strong>Общая сумма: ${formatPrice(orderTotalPrice)}</strong></p>
+                <p><strong>Скидка: ${discountPercentage}%</strong></p>
+                <p><strong>Сумма со скидкой: ${formatPrice(orderTotalPrice)}</strong></p>
             </div>
             <div class="order-item-actions">
                 <button class="edit-btn">Редактировать</button>
                 <button class="delete-btn">Удалить</button>
                 <button class="compare-btn">Сравнить</button>
+                <button class="print-btn">Печать чека</button>
             </div>
-            <hr>
         `;
         orderHistoryContainer.appendChild(orderElement);
 
-        // Добавляем обработчики для кнопок редактирования, удаления и сравнения
+        // Добавляем обработчики для кнопок редактирования, удаления, сравнения и печати
         const editButton = orderElement.querySelector(".edit-btn");
         const deleteButton = orderElement.querySelector(".delete-btn");
         const compareButton = orderElement.querySelector(".compare-btn");
+        const printButton = orderElement.querySelector(".print-btn");
 
         editButton.addEventListener("click", function () {
             openEditOrderModal(order.id);
@@ -317,9 +372,71 @@ document.addEventListener("DOMContentLoaded", function () {
         compareButton.addEventListener("click", function () {
             toggleCompare(order.id, compareButton);
         });
+
+        printButton.addEventListener("click", function () {
+            openPrintModal(order);
+        });
     }
 
-    // Остальной код остается без изменений
+    // Функция для открытия модального окна печати
+    function openPrintModal(order) {
+        const printableContent = document.getElementById("printable-content");
+        printableContent.innerHTML = generateReceiptHTML(order);
+        printModal.style.display = "flex";
+
+        // Обработчик кнопки печати
+        const printButton = document.getElementById("print-button");
+        // Удаляем предыдущие обработчики, чтобы избежать дублирования
+        const newPrintButton = printButton.cloneNode(true);
+        printButton.parentNode.replaceChild(newPrintButton, printButton);
+        newPrintButton.addEventListener("click", function () {
+            window.print();
+        });
+    }
+
+    // Генерация HTML для чека
+    function generateReceiptHTML(order) {
+        const discountPercentage = order.discount ? order.discount * 100 : 0;
+        const orderTotalPrice = order.totalPrice ? order.totalPrice : 0;
+
+        return `
+            <h2>Чек заказа</h2>
+            <div class="receipt-info">
+                <p><strong>Заказчик:</strong> ${order.customerName}</p>
+                <p><strong>Телефон:</strong> ${order.phone}</p>
+                <p><strong>Компания:</strong> ${order.company}</p>
+                <p><strong>Дата доставки:</strong> ${formatDate(order.items[0].deliveryDate)}</p>
+            </div>
+            <hr>
+            <div class="receipt-items-list">
+                ${order.items.map(item => `
+                    <div class="receipt-item-details">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="receipt-item-info">
+                            <p><strong>${item.name}</strong></p>
+                            <p>Размер: ${item.size}</p>
+                            <p>Цвет: ${item.color}</p>
+                            <p>Количество: ${item.quantity}</p>
+                            <p>Заметки: ${item.notes}</p>
+                            <p class="price">Цена за единицу: ${formatPrice(item.price)}</p>
+                            <p class="total-price"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <hr>
+            <div class="receipt-summary">
+                <p><strong>Общая сумма: ${formatPrice(orderTotalPrice)}</strong></p>
+                <p><strong>Скидка: ${discountPercentage}%</strong></p>
+                <p><strong>Сумма со скидкой: ${formatPrice(orderTotalPrice)}</strong></p>
+            </div>
+        `;
+    }
+
+    // Закрытие модального окна печати
+    document.querySelector("#modal-print .close").addEventListener("click", function () {
+        printModal.style.display = "none";
+    });
 
     // Загрузка истории заказов из Firebase
     function loadOrderHistory() {
@@ -425,10 +542,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Обновление отображения заказа
                 const orderElement = orderHistoryContainer.querySelector(`[data-order-id="${editOrderId}"]`);
                 if (orderElement) {
-                    orderElement.querySelector("h3").innerText = `Заказ от ${customerName} (${formatDate(orderElement.querySelector("h3").innerText.split('(')[1].slice(0, -1))})`;
-                    const paragraphs = orderElement.querySelectorAll("p");
-                    paragraphs[0].innerHTML = `<strong>Телефон:</strong> ${phone}`;
-                    paragraphs[1].innerHTML = `<strong>Компания:</strong> ${company}`;
+                    orderElement.querySelector("h3").innerText = `Заказ от ${customerName}`;
+                    const infoSection = orderElement.querySelector(".order-info");
+                    infoSection.innerHTML = `
+                        <p><strong>Телефон:</strong> ${phone}</p>
+                        <p><strong>Компания:</strong> ${company}</p>
+                        <p><strong>Дата доставки:</strong> ${formatDate(orderElement.querySelector(".order-info p:last-child").innerText.split(': ')[1])}</p>
+                    `;
                 }
 
                 editOrderModal.style.display = "none";
@@ -509,14 +629,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             compareItemElement.classList.add("compare-item");
                             compareItemElement.innerHTML = `
                                 <img src="${item.image}" alt="${item.name}">
-                                <div>
+                                <div class="compare-item-info">
                                     <p><strong>${item.name}</strong></p>
                                     <p>Размер: ${item.size}</p>
                                     <p>Цвет: ${item.color}</p>
                                     <p>Количество: ${item.quantity}</p>
                                     <p>Заметки: ${item.notes}</p>
-                                    <p class="price" data-price="${item.price}">Цена за единицу: ${formatPrice(item.price)}</p>
-                                    <p class="total-price" data-total="${item.price * item.quantity}"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
+                                    <p class="price">Цена за единицу: ${formatPrice(item.price)}</p>
+                                    <p class="total-price"><strong>Итого: ${formatPrice(item.price * item.quantity)}</strong></p>
                                 </div>
                             `;
                             compareItemsContainer.appendChild(compareItemElement);
@@ -588,13 +708,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // Обновление цен в модальных окнах фасонов
         document.querySelectorAll(".price").forEach(priceElement => {
             const priceInUZS = parseFloat(priceElement.getAttribute("data-price"));
-            priceElement.innerText = `Цена: ${formatPrice(priceInUZS)}`;
+            priceElement.innerText = `Цена за единицу: ${formatPrice(priceInUZS)}`;
         });
 
         // Обновление цен в корзине
         document.querySelectorAll(".cart-item .price").forEach(priceElement => {
             const priceInUZS = parseFloat(priceElement.getAttribute("data-price"));
-            priceElement.innerText = formatPrice(priceInUZS);
+            priceElement.innerText = `Цена за единицу: ${formatPrice(priceInUZS)}`;
         });
 
         document.querySelectorAll(".cart-item .total-price").forEach(totalPriceElement => {
