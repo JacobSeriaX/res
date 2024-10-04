@@ -26,7 +26,7 @@ h1 {
     text-align: center;
     margin-bottom: 10px;
     font-size: 2.5rem;
-    color: #007bff;
+    color: #ff5500;
 }
 
 .currency-switcher {
@@ -38,7 +38,7 @@ h2 {
     text-align: center;
     margin-bottom: 30px;
     font-size: 2.5rem;
-    color: #007bff;
+    color: #ff5500;
     position: relative;
 }
 
@@ -46,7 +46,7 @@ h2::after {
     content: '';
     width: 60px;
     height: 4px;
-    background-color: #007bff;
+    background-color: #ff5500;
     display: block;
     margin: 10px auto 0;
     border-radius: 2px;
@@ -90,7 +90,7 @@ h3 {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, #007bff, #00c6ff);
+    background: linear-gradient(45deg, #ff5500, #ff5500);
     transition: transform 0.5s ease;
     transform: rotate(45deg) scale(0);
     z-index: 0;
@@ -167,7 +167,7 @@ h3 {
 }
 
 .close:hover {
-    color: #007bff;
+    color: #ff5500;
 }
 
 /* Список фасонов */
@@ -213,7 +213,7 @@ h3 {
 
 .fashion-item .select-btn {
     padding: 10px;
-    background-color: #28a745;
+    background-color: #ff5500;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -223,7 +223,7 @@ h3 {
 }
 
 .fashion-item .select-btn:hover {
-    background-color: #218838;
+    background-color: #ff5500;
 }
 
 /* Стили для модального окна выбора товара */
@@ -316,7 +316,7 @@ h3 {
 }
 
 #modal-fashion .size-option input:focus {
-    border-color: #007bff;
+    border-color: #ff5500;
     outline: none;
 }
 
@@ -342,14 +342,14 @@ h3 {
 }
 
 #modal-fashion .additional-options textarea:focus {
-    border-color: #007bff;
+    border-color: #ff5500;
     outline: none;
 }
 
 #modal-fashion .product-options button {
     align-self: center;
     padding: 12px 30px;
-    background-color: #007bff;
+    background-color: #ff5500;
     color: #fff;
     border: none;
     border-radius: 30px;
@@ -359,7 +359,7 @@ h3 {
 }
 
 #modal-fashion .product-options button:hover {
-    background-color: #0056b3;
+    background-color: #ff5500;
     transform: translateY(-2px);
 }
 
@@ -373,7 +373,7 @@ h3 {
 }
 
 .cart h2, .order-history h2, .analytics h2 {
-    color: #007bff;
+    color: #ff5500;
 }
 
 #cart-items, #order-history-items, #analytics-content {
@@ -416,13 +416,13 @@ h3 {
 .cart-total, .compare-total, .analytics-total {
     margin-top: 10px;
     font-size: 1.2rem;
-    color: #007bff;
+    color: #ff5500;
 }
 
 #checkout, #compare-selected {
     margin-top: 20px;
     padding: 12px 25px;
-    background-color: #28a745;
+    background-color: #ff5500;
     color: #fff;
     border: none;
     border-radius: 25px;
@@ -432,7 +432,7 @@ h3 {
 }
 
 #checkout:hover, #compare-selected:hover {
-    background-color: #218838;
+    background-color: #ff5500;
     transform: translateY(-2px);
 }
 
@@ -523,13 +523,13 @@ h3 {
 .compare-total {
     text-align: right;
     font-size: 1.2rem;
-    color: #28a745;
+    color: #ff5500;
 }
 
 /* Общий стиль для кнопок */
 button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #ff5500;
     color: white;
     border: none;
     cursor: pointer;
@@ -538,7 +538,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #ff5500;
     transform: translateY(-2px);
 }
 
@@ -724,7 +724,7 @@ button:hover {
 .order-total {
     margin-top: 10px;
     font-size: 1.1rem;
-    color: #007bff;
+    color: #ff5500;
 }
 
 /* Секция Аналитики */
@@ -828,7 +828,7 @@ button:hover {
 
 #modal-print #print-button {
     margin-top: 20px;
-    background-color: #007bff;
+    background-color: #ff5500;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -838,7 +838,7 @@ button:hover {
 }
 
 #modal-print #print-button:hover {
-    background-color: #0056b3;
+    background-color: #ff5500;
     transform: translateY(-2px);
 }
 
